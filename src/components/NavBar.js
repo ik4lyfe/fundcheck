@@ -10,7 +10,9 @@ export default function NavBar() {
   const { data: session } = useSession();
   const [dark, setDark] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const menuRef = useRef(null);
+  const mobileRef = useRef(null);
 
   useEffect(() => {
     setDark(document.documentElement.classList.contains('dark'));
@@ -21,6 +23,9 @@ export default function NavBar() {
     function handleClick(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setMenuOpen(false);
+      }
+      if (mobileRef.current && !mobileRef.current.contains(e.target)) {
+        setMobileOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClick);
@@ -40,13 +45,14 @@ export default function NavBar() {
   ];
 
   return (
-    <nav className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-      <div className="max-w-5xl mx-auto px-4 flex items-center h-14 gap-6">
+    <nav className="relative border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+      <div className="max-w-5xl mx-auto px-4 flex items-center h-14 gap-2 sm:gap-6">
         <Link href="/" className="font-semibold text-sm tracking-tight text-gray-900 dark:text-gray-100 shrink-0">
           Fundamental
         </Link>
 
-        <div className="flex gap-1 flex-1">
+        {/* Desktop nav links — hidden on sm and below */}
+        <div className="hidden sm:flex gap-1 flex-1">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -60,6 +66,43 @@ export default function NavBar() {
               {l.label}
             </Link>
           ))}
+        </div>
+
+        {/* Mobile hamburger — only on sm */}
+        <div ref={mobileRef} className="sm:hidden flex-1">
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="px-2 py-1.5 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {mobileOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+
+          {/* Mobile dropdown */}
+          {mobileOpen && (
+            <div className="absolute left-0 right-0 top-14 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-lg py-2 px-4">
+              {links.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`block px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                    pathname === l.href
+                      ? 'bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         <button
