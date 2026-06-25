@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, forwardRef, useImperativeHandle } from 'react';
 import { useRouter } from 'next/navigation';
-import StockSelector from './StockSelector';
 
 const ratings = [
   { label: 'Poor', value: 1 },
@@ -34,15 +33,28 @@ function RatingSelector({ value, onChange }) {
   );
 }
 
-export default function QualitativeForm({ title, tab, criteria, maxScore }) {
+const QualitativeForm = forwardRef(function QualitativeForm({ title, tab, criteria, maxScore, company, onCompanyChange, date }, ref) {
   const router = useRouter();
-  const [company, setCompany] = useState('');
   const [scores, setScores] = useState({});
+  const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
 
   const total = Object.values(scores).reduce((a, b) => a + b, 0);
   const allRated = criteria.length === Object.keys(scores).length;
+
+  useImperativeHandle(ref, () => ({
+    getData: () => ({
+      tab,
+      criteria,
+      scores,
+      notes,
+      total,
+      maxScore,
+      allRated,
+      label: title,
+    }),
+  }));
 
   function handleScore(idx, val) {
     setScores((prev) => ({ ...prev, [idx]: val }));
@@ -55,6 +67,7 @@ export default function QualitativeForm({ title, tab, criteria, maxScore }) {
 
     const data = {
       Date: new Date().toISOString().split('T')[0],
+      'Date of Review': date,
       Counter: company.trim(),
     };
 
@@ -62,6 +75,7 @@ export default function QualitativeForm({ title, tab, criteria, maxScore }) {
       data[c.header] = scores[i] || '';
     });
     data['Total Score'] = total;
+    data['Notes'] = notes;
 
     const res = await fetch('/api/entries', {
       method: 'POST',
@@ -75,8 +89,8 @@ export default function QualitativeForm({ title, tab, criteria, maxScore }) {
     if (result.success) {
       setDone(true);
       setTimeout(() => {
-        setCompany('');
         setScores({});
+        setNotes('');
         setDone(false);
         router.refresh();
       }, 1500);
@@ -85,14 +99,11 @@ export default function QualitativeForm({ title, tab, criteria, maxScore }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Counter / Stock field */}
-      <div className="flex flex-wrap gap-4 items-end">
-        <StockSelector value={company} onChange={setCompany} />
-        <div className="text-right">
-          <div className="text-xs text-gray-400 uppercase tracking-wide">Score</div>
-          <div className="text-2xl font-bold tabular-nums">
-            {total}<span className="text-gray-300 text-lg font-normal">/{maxScore}</span>
-          </div>
+      {/* Score indicator */}
+      <div className="flex items-center justify-between">
+        <div className="text-xs text-gray-400 uppercase tracking-wide">Score</div>
+        <div className="text-2xl font-bold tabular-nums">
+          {total}<span className="text-gray-300 text-lg font-normal">/{maxScore}</span>
         </div>
       </div>
 
@@ -114,21 +125,37 @@ export default function QualitativeForm({ title, tab, criteria, maxScore }) {
         ))}
       </div>
 
+      {/* Notes */}
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Notes (optional)</label>
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          rows={2}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 resize-none"
+          placeholder="Key observations..."
+        />
+      </div>
+
       {/* Submit */}
-      <div className="flex items-center gap-3">
-        <button
-          type="submit"
-          disabled={!company.trim() || !allRated || saving}
-          className="px-6 py-2.5 rounded-lg text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >
-          {saving ? 'Saving...' : done ? '✓ Saved!' : 'Save to Sheet'}
-        </button>
-        {!allRated && (
-          <span className="text-xs text-amber-600">
-            Rate all {criteria.length} criteria first
-          </span>
-        )}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <button
+            type="submit"
+            disabled={!company.trim() || !allRated || saving}
+            className="px-6 py-2.5 rounded-lg text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            {saving ? 'Saving...' : done ? '✓ Saved!' : 'Save to Sheet'}
+          </button>
+          {!allRated && (
+            <span className="text-xs text-amber-600">
+              Rate all {criteria.length} criteria first
+            </span>
+          )}
+        </div>
       </div>
     </form>
   );
-}
+});
+
+export default QualitativeForm;

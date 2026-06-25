@@ -11,10 +11,10 @@ function getAuth() {
 }
 
 function getRange(tab) {
-  if (tab === 'business') return 'Business!A2:N';
-  if (tab === 'management') return 'Management!A2:N';
-  if (tab === 'quantitative') return 'Quantitative!A2:T';
-  return 'Business!A2:N';
+  if (tab === 'business') return 'Business!A2:P';
+  if (tab === 'management') return 'Management!A2:P';
+  if (tab === 'quantitative') return 'Quantitative!A2:Z';
+  return 'Business!A2:P';
 }
 
 function getHeaders(tab) {
@@ -23,15 +23,17 @@ function getHeaders(tab) {
       'ID', 'Date', 'Counter',
       'Products & Services', 'Market Size', 'Margin', 'Competitive Edge',
       'Growth', 'Business Model', 'Sustainability', 'Industry Nature',
-      'Competition', 'Risks', 'Total Score'
+      'Competition', 'Risks', 'Total Score',
+      'Date of Review', 'Notes'
     ];
   }
   if (tab === 'management') {
     return [
       'ID', 'Date', 'Counter',
-      'Owners', 'Board of Directors', 'Management Competence', 'Management Integrity',
-      'Corporate Governance', 'Shareholder Consideration', 'Executive Compensation',
-      'Staff Recognition & Retention', 'Corporate Actions', 'Auditor Figures', 'Total Score'
+      'Owners', 'Board of Directors', 'Management Competency', 'Management Integrity',
+      'Corporate Governance', 'Wealth Creation for Shareholders', 'Executive Compensation',
+      'Talents Attraction & Retention', 'Corporate Actions', 'Adjusted Figures', 'Total Score',
+      'Date of Review', 'Notes'
     ];
   }
   if (tab === 'quantitative') {
@@ -43,7 +45,9 @@ function getHeaders(tab) {
       'Current Assets', 'Current Liabilities', 'Current Ratio',
       'Total Liabilities', 'Total Equity', 'D/E Ratio',
       'DPS', 'Share Price', 'Dividend Yield',
-      'Valuation Score', 'Notes'
+      'Market Cap', 'P/E Ratio', 'ROE', 'Net Margin',
+      'Valuation Score',
+      'Date of Review', 'Notes',
     ];
   }
   return [];
@@ -114,7 +118,10 @@ export async function deleteEntry(tab = 'business', id) {
     if (rowIdx === -1) return { success: false, error: 'Not found' };
 
     // Clear the row
-    const clearRange = `${tab === 'business' ? 'Business' : tab === 'management' ? 'Management' : 'Quantitative'}!A${rowIdx + 2}:${String.fromCharCode(64 + getHeaders(tab).length)}${rowIdx + 2}`;
+    const sheetName = tab === 'business' ? 'Business' : tab === 'management' ? 'Management' : 'Quantitative';
+    const colCount = getHeaders(tab).length;
+    const endCol = String.fromCharCode(64 + colCount);
+    const clearRange = `${sheetName}!A${rowIdx + 2}:${endCol}${rowIdx + 2}`;
 
     await sheets.spreadsheets.values.clear({
       spreadsheetId: SPREADSHEET_ID,

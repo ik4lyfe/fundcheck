@@ -2,7 +2,7 @@ import NavBar from '@/components/NavBar';
 import './globals.css';
 
 export const metadata = {
-  title: 'FundCheck — Fundamental Analysis Tool',
+  title: 'Fundamental — Stock Analysis Tool',
   description: 'WealthFort checklist-based fundamental analysis tool',
 };
 
@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
                 className="h-6 sm:h-7 w-auto opacity-70"
               />
               <p className="text-xs text-gray-400 leading-relaxed max-w-md">
-                FundCheck is powered by{' '}
+                Fundamental is powered by{' '}
                 <span className="font-medium text-gray-500">WealthFort International Sdn. Bhd.</span>
                 <br />
                 All Rights Reserved &copy; {new Date().getFullYear()}
