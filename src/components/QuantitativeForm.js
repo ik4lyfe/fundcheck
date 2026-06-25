@@ -326,7 +326,7 @@ const QuantitativeForm = forwardRef(function QuantitativeForm({ company, onCompa
         <div className="rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800 bg-white overflow-hidden">
           <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700">
             <img
-              src="https://searchvectorlogo.com/wp-content/uploads/2021/07/tradingview-logo-vector.png"
+              src="/tradingview-logo-dark.png"
               alt="TradingView"
               className="h-4 w-auto dark:invert"
             />
