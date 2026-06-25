@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import StockSelector from './StockSelector';
 
 const ratings = [
   { label: 'Poor', value: 1 },
@@ -54,7 +55,7 @@ export default function QualitativeForm({ title, tab, criteria, maxScore }) {
 
     const data = {
       Date: new Date().toISOString().split('T')[0],
-      Company: company.trim(),
+      Counter: company.trim(),
     };
 
     criteria.forEach((c, i) => {
@@ -84,21 +85,9 @@ export default function QualitativeForm({ title, tab, criteria, maxScore }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Company field */}
+      {/* Counter / Stock field */}
       <div className="flex flex-wrap gap-4 items-end">
-        <div className="flex-1 min-w-[200px]">
-          <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">
-            Company
-          </label>
-          <input
-            type="text"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-            placeholder="e.g. TM, MAYBANK, PBBANK"
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20"
-            required
-          />
-        </div>
+        <StockSelector value={company} onChange={setCompany} />
         <div className="text-right">
           <div className="text-xs text-gray-400 uppercase tracking-wide">Score</div>
           <div className="text-2xl font-bold tabular-nums">

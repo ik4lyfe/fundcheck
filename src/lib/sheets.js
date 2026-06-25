@@ -20,7 +20,7 @@ function getRange(tab) {
 function getHeaders(tab) {
   if (tab === 'business') {
     return [
-      'ID', 'Date', 'Company',
+      'ID', 'Date', 'Counter',
       'Products & Services', 'Market Size', 'Margin', 'Competitive Edge',
       'Growth', 'Business Model', 'Sustainability', 'Industry Nature',
       'Competition', 'Risks', 'Total Score'
@@ -28,7 +28,7 @@ function getHeaders(tab) {
   }
   if (tab === 'management') {
     return [
-      'ID', 'Date', 'Company',
+      'ID', 'Date', 'Counter',
       'Owners', 'Board of Directors', 'Management Competence', 'Management Integrity',
       'Corporate Governance', 'Shareholder Consideration', 'Executive Compensation',
       'Staff Recognition & Retention', 'Corporate Actions', 'Auditor Figures', 'Total Score'
@@ -36,7 +36,7 @@ function getHeaders(tab) {
   }
   if (tab === 'quantitative') {
     return [
-      'ID', 'Date', 'Company',
+      'ID', 'Date', 'Counter',
       'Revenue 5yr Ago', 'Revenue Current', 'Revenue CAGR',
       'EPS 5yr Ago', 'EPS Current', 'EPS CAGR',
       'OCF Years',
