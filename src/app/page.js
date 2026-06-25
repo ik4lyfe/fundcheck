@@ -1,9 +1,4 @@
-'use client';
-
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import AnimatedBackground from '@/components/AnimatedBackground';
 
 const features = [
@@ -25,23 +20,6 @@ const features = [
 ];
 
 export default function LandingPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === 'authenticated') {
-      router.push('/analysis');
-    }
-  }, [status, router]);
-
-  if (status === 'loading' || status === 'authenticated') {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-gray-400 dark:text-gray-500 text-sm">Loading...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-[80vh] flex flex-col">
       {/* Hero Section */}
@@ -63,21 +41,15 @@ export default function LandingPage() {
             A structured, checklist-based approach to fundamental analysis. Evaluate businesses,
             management teams, and financial health with clarity and confidence.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="mt-10">
             <Link
               href="/analysis"
               className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl text-sm font-semibold text-white bg-gray-900 dark:bg-gray-100 dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-lg shadow-gray-900/10 dark:shadow-gray-900/20"
             >
-              Start Free Analysis
+              Start Analysis
               <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </Link>
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:border-gray-300 dark:hover:border-gray-600 transition-all"
-            >
-              Sign In
             </Link>
           </div>
         </div>

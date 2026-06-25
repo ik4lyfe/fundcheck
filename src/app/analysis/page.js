@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import StockSelector from '@/components/StockSelector';
 import QualitativeForm from '@/components/QualitativeForm';
 import QuantitativeForm from '@/components/QuantitativeForm';
@@ -105,8 +103,6 @@ function HistoryTable({ tab, entries }) {
 /* ====== MAIN PAGE ====== */
 
 export default function AnalysisPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
   const [stock, setStock] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [tab, setTab] = useState('business');
@@ -130,12 +126,6 @@ export default function AnalysisPage() {
   }, [tab]);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.replace('/login');
-    }
-  }, [status, router]);
-
-  useEffect(() => {
     fetchEntries();
   }, [fetchEntries]);
 
@@ -149,15 +139,6 @@ export default function AnalysisPage() {
   }
 
   const currentTab = tabs.find((t) => t.key === tab);
-
-  // Auth guard — show nothing until session resolves
-  if (status === 'loading' || status === 'unauthenticated') {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-gray-400 dark:text-gray-500 text-sm">Loading...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-8">

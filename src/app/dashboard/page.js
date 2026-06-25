@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 
 const tabs = [
   { key: 'business', label: 'Business', scoreLabel: 'Total Score' },
@@ -11,8 +9,6 @@ const tabs = [
 ];
 
 export default function DashboardPage() {
-  const { status } = useSession();
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState('business');
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,23 +26,8 @@ export default function DashboardPage() {
   }
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.replace('/login');
-    }
-  }, [status, router]);
-
-  useEffect(() => {
     fetchEntries();
   }, [activeTab]);
-
-  // Auth guard
-  if (status === 'loading' || status === 'unauthenticated') {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-gray-400 dark:text-gray-500 text-sm">Loading...</div>
-      </div>
-    );
-  }
 
   // Group unique stocks reviewed
   const uniqueStocks = [...new Set(entries.map((e) => e.counter || e.data?.Counter || e.data?.counter).filter(Boolean))];
