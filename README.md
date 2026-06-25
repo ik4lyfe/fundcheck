@@ -21,7 +21,7 @@
 
 ## Features
 
-- **No Login Required** — Open the app and start analysing immediately.
+- **Google Sign-In** — Click "Start Analysis", sign in with Google, and go. No passwords to remember.
 - **Auto-Fill from Market** — Fetches live financial data from TradingView (P/E, net margin, debt, free cash flow, etc.) — no manual typing needed.
 - **Shariah Compliance Badge** — Know at a glance whether a stock is Shariah-compliant (visible during stock selection).
 - **Real Bursa Stock Search** — Search from 1,100+ Malaysian-listed stocks via TradingView scanner API.
@@ -43,6 +43,7 @@
 | Layer | Technology |
 |-------|-----------|
 | **Framework** | [Next.js 16](https://nextjs.org) (App Router) |
+| **Auth** | [Auth.js v5](https://authjs.dev) (Google OAuth) |
 | **Database** | [Neon (Vercel Postgres)](https://neon.tech) via [Drizzle ORM](https://orm.drizzle.team) |
 | **Styling** | [Tailwind CSS v4](https://tailwindcss.com) |
 | **Charts & PDF** | jsPDF + jspdf-autotable + html2canvas |
@@ -69,7 +70,7 @@
 │                  Next.js API Routes                      │
 │  ┌────────────┐ ┌────────────┐ ┌──────────────────┐    │
 │  │ /api/auth  │ │ /api/entries│ │ /api/financials  │    │
-│  │ (Auth.js)  │ │ (CRUD)      │ │ (TV Proxy)       │    │
+│  │ (NextAuth) │ │ (CRUD)      │ │ (TV Proxy)       │    │
 │  └────────────┘ └─────┬──────┘ └────────┬─────────┘    │
 └────────────────────────┼────────────────┼──────────────┘
                          │                │
@@ -81,6 +82,7 @@
 
 ### Security
 
+- **No passwords stored** — Authentication is delegated entirely to Google OAuth (handles 2FA, brute-force protection).
 - **Input validation** — All POST data is validated with Zod schemas before processing.
 - **Rate-limited APIs** — 30 req/min for write endpoints, 60 req/min for data proxies.
 - **Security headers** — CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy set via Next.js config.
@@ -92,7 +94,7 @@
 ### Prerequisites
 
 - Node.js 18+
-- A Google Cloud project with OAuth credentials (for authentication)
+- A Google Cloud project with OAuth credentials (for Google sign-in)
 - A Vercel Postgres database
 
 ### 1. Clone the Repository

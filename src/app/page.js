@@ -1,4 +1,6 @@
-import Link from 'next/link';
+'use client';
+
+import { signIn } from 'next-auth/react';
 import AnimatedBackground from '@/components/AnimatedBackground';
 
 const features = [
@@ -42,15 +44,15 @@ export default function LandingPage() {
             management teams, and financial health with clarity and confidence.
           </p>
           <div className="mt-10">
-            <Link
-              href="/analysis"
+            <button
+              onClick={() => signIn('google', { callbackUrl: '/analysis' })}
               className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl text-sm font-semibold text-white bg-gray-900 dark:bg-gray-100 dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-lg shadow-gray-900/10 dark:shadow-gray-900/20"
             >
               Start Analysis
               <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </Link>
+            </button>
           </div>
         </div>
       </section>
