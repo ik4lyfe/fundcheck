@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import AnimatedBackground from '@/components/AnimatedBackground';
 
@@ -22,6 +23,7 @@ const features = [
 ];
 
 export default function LandingPage() {
+  const [loading, setLoading] = useState(false);
   return (
     <div className="min-h-[80vh] flex flex-col">
       {/* Hero Section */}
@@ -45,13 +47,26 @@ export default function LandingPage() {
           </p>
           <div className="mt-10">
             <button
-              onClick={() => signIn('google', { callbackUrl: '/analysis' })}
-              className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl text-sm font-semibold text-white bg-gray-900 dark:bg-gray-100 dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-lg shadow-gray-900/10 dark:shadow-gray-900/20"
+              onClick={() => { setLoading(true); signIn('google', { callbackUrl: '/analysis' }); }}
+              disabled={loading}
+              className={`inline-flex items-center justify-center px-8 py-3.5 rounded-xl text-sm font-semibold text-white bg-gray-900 dark:bg-gray-100 dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-lg shadow-gray-900/10 dark:shadow-gray-900/20 disabled:opacity-60 disabled:cursor-not-allowed`}
             >
-              Start Analysis
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+              {loading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Signing in…
+                </>
+              ) : (
+                <>
+                  Start Analysis
+                  <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </>
+              )}
             </button>
           </div>
         </div>
