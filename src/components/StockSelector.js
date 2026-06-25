@@ -120,9 +120,12 @@ export default function StockSelector({ value, onChange }) {
               }`}
             >
               <div className="flex items-center justify-between">
-                <div>
+                <div className="flex items-center gap-1.5">
                   <span className="font-semibold text-gray-900 dark:text-gray-100">{stock.symbol}</span>
-                  <span className="text-gray-400 dark:text-gray-500 mx-1.5">—</span>
+                  {stock.shariah === true && (
+                    <span className="text-xs" title="Shariah-Compliant">🟢</span>
+                  )}
+                  <span className="text-gray-400 dark:text-gray-500 mx-1">—</span>
                   <span className="text-gray-600 dark:text-gray-300 text-xs">{stock.name}</span>
                 </div>
                 <div className="flex items-center gap-2">
