@@ -2,31 +2,26 @@
 
 import { useEffect, useState } from 'react';
 
-// Generate random candlestick data with consistent positions (deterministic)
-const CANDLES = Array.from({ length: 18 }, (_, i) => ({
+const CANDLES = Array.from({ length: 10 }, (_, i) => ({
   id: i,
-  left: 3 + (i * 5.2) % 94,
-  top: 20 + (i * 7.3 + Math.sin(i * 1.2) * 12) % 60,
-  height: 18 + Math.sin(i * 0.9) * 10,
-  width: 4 + Math.abs(Math.sin(i * 1.5)) * 3,
-  delay: i * 0.4,
-  duration: 14 + (i % 5) * 3,
-  wickTop: 5 + Math.abs(Math.sin(i * 0.7)) * 8,
-  wickBottom: 5 + Math.abs(Math.cos(i * 0.8)) * 8,
+  l: 4 + (i * 9.5 + i * i * 0.4) % 90,
+  t: 18 + (i * 8.5) % 55,
+  h: 22 + Math.sin(i * 0.8) * 10,
+  w: 3 + (i % 2) * 2,
+  d: i,
+  up: Math.sin(i * 2.1) > 0,
 }));
 
-const NUMBERS = Array.from({ length: 12 }, (_, i) => ({
+const NUMS = Array.from({ length: 8 }, (_, i) => ({
   id: i + 100,
-  left: 5 + (i * 9.3 + i * i * 0.7) % 90,
-  top: 10 + (i * 11.7) % 75,
-  value: (Math.random() * 10000).toFixed(1),
-  delay: i * 0.8,
-  size: 10 + (i % 3) * 2,
+  l: 6 + (i * 11 + i * i * 0.5) % 88,
+  t: 12 + (i * 13) % 70,
+  v: (Math.random() * 5000 + 10).toFixed(1),
+  d: i,
 }));
 
-// Theme-aware colours
-const DARK = { candleUp: '#22d3ee', candleDn: '#c084fc', num: '#94a3b8', wave1: '#22d3ee', wave2: '#c084fc' };
-const LIGHT = { candleUp: '#94a3b8', candleDn: '#60a5fa', num: '#cbd5e1', wave1: '#94a3b8', wave2: '#60a5fa' };
+const DARK = { cu: '#22d3ee', cd: '#c084fc', nc: '#94a3b8', w1: '#22d3ee', w2: '#c084fc' };
+const LIGHT = { cu: '#94a3b8', cd: '#60a5fa', nc: '#cbd5e1', w1: '#94a3b8', w2: '#60a5fa' };
 
 export default function AnimatedBackground() {
   const [mounted, setMounted] = useState(false);
@@ -35,105 +30,67 @@ export default function AnimatedBackground() {
   useEffect(() => {
     setMounted(true);
     setDark(document.documentElement.classList.contains('dark'));
-
-    // Watch for theme changes (triggered by NavBar toggle)
-    const obs = new MutationObserver(() => {
-      setDark(document.documentElement.classList.contains('dark'));
-    });
+    const obs = new MutationObserver(() => setDark(document.documentElement.classList.contains('dark')));
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => obs.disconnect();
   }, []);
 
   if (!mounted) return null;
 
-  const c = dark ? DARK : LIGHT;
-  const candleColors = CANDLES.map((_, i) => (Math.sin(i * 2.1) > 0 ? c.candleUp : c.candleDn));
+  const t = dark ? DARK : LIGHT;
+  const o = dark ? 0.2 : 0.14;
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-      {/* Grid pattern */}
-      <svg className="absolute inset-0 w-full h-full"
-        style={{ opacity: dark ? 0.04 : 0.025 }}
-        xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="agrid" width="60" height="60" patternUnits="userSpaceOnUse">
-            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="0.5" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#agrid)" />
-      </svg>
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
+      {/* Grid */}
+      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0,0,0,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.08) 1px,transparent 1px)',
+          backgroundSize: '60px 60px',
+        }} />
 
-      {/* Wave line */}
-      <svg className="absolute inset-x-0 top-1/3 -translate-y-1/2 w-full h-32"
-        style={{ opacity: dark ? 0.08 : 0.05 }}
-        viewBox="0 0 1200 128" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="agrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor={c.wave1} stopOpacity="0" />
-            <stop offset="30%" stopColor={c.wave1} stopOpacity={dark ? 0.6 : 0.3} />
-            <stop offset="60%" stopColor={c.wave2} stopOpacity={dark ? 0.4 : 0.2} />
-            <stop offset="100%" stopColor={c.wave2} stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d="M0,64 C200,20 400,108 600,64 C800,20 1000,108 1200,64 L1200,128 L0,128 Z"
-          fill="url(#agrad)" className="animate-wave" />
-      </svg>
+      {/* Wave */}
+      <div className="absolute inset-x-0 top-1/3 -translate-y-1/2 h-28 animate-wave"
+        style={{ opacity: dark ? 0.12 : 0.07 }} />
 
       {/* Candles */}
-      {CANDLES.map((candle, i) => (
-        <div
-          key={candle.id}
-          className="absolute"
-          style={{
-            left: `${candle.left}%`,
-            top: `${candle.top}%`,
-            opacity: dark ? 0.12 : 0.08,
-            animation: `candleFloat ${candle.duration}s ease-in-out ${candle.delay}s infinite`,
-          }}
-        >
-          <div className="mx-auto" style={{ width: 1, height: candle.wickTop, backgroundColor: candleColors[i] }} />
-          <div style={{ width: candle.width, height: candle.height, backgroundColor: candleColors[i], borderRadius: 1 }} />
-          <div className="mx-auto" style={{ width: 1, height: candle.wickBottom, backgroundColor: candleColors[i] }} />
+      {CANDLES.map((c) => (
+        <div key={c.id} className="absolute" style={{
+          left: `${c.l}%`, top: `${c.t}%`, opacity: o,
+          animation: `kf${c.id} ${8 + c.d % 5}s ease-in-out ${c.d * 0.5}s infinite`,
+        }}>
+          <div className="mx-auto" style={{ width: 1, height: 10 + c.h * 0.3, background: c.up ? t.cu : t.cd }} />
+          <div style={{ width: c.w, height: c.h, background: c.up ? t.cu : t.cd, borderRadius: 1 }} />
+          <div className="mx-auto" style={{ width: 1, height: 8 + c.h * 0.25, background: c.up ? t.cu : t.cd }} />
         </div>
       ))}
 
       {/* Numbers */}
-      {NUMBERS.map((n) => (
-        <div
-          key={n.id}
-          className="absolute font-mono"
-          style={{
-            left: `${n.left}%`,
-            top: `${n.top}%`,
-            fontSize: n.size,
-            color: c.num,
-            opacity: dark ? 0.06 : 0.04,
-            animation: `numPulse ${20 + n.delay}s ease-in-out ${n.delay}s infinite`,
-          }}
-        >
-          {n.value}
-        </div>
+      {NUMS.map((n) => (
+        <div key={n.id} className="absolute font-mono" style={{
+          left: `${n.l}%`, top: `${n.t}%`, fontSize: 11, color: t.nc, opacity: o * 0.6,
+          animation: `kp${n.id} ${12 + n.d % 4}s ease-in-out ${n.d * 0.7}s infinite`,
+        }}>{n.v}</div>
       ))}
 
       <style>{`
-        @keyframes candleFloat {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-16px) scale(1.04); }
+        ${CANDLES.map((c) => `@keyframes kf${c.id} {
+          0%,100%{transform:translateY(0) scaleY(1)}
+          50%{transform:translateY(-28px) scaleY(1.07)}
+        }`).join('\n')}
+        ${NUMS.map((n) => `@keyframes kp${n.id} {
+          0%,100%{opacity:${o * 0.35}}50%{opacity:${o}}
+        }`).join('\n')}
+        @keyframes wm{0%,100%{background-position:0 0}50%{background-position:-80px 0}}
+        .animate-wave {
+          background: linear-gradient(90deg,transparent 0%,${t.w1}50 30%,${t.w2}40 60%,transparent 100%);
+          border-radius: 50%;
+          filter: blur(25px);
+          animation: wm 5s ease-in-out infinite;
         }
-        @keyframes numPulse {
-          0%, 100% { opacity: 0.03; }
-          25% { opacity: 0.08; }
-          50% { opacity: 0.04; }
-          75% { opacity: 0.06; }
-        }
-        @keyframes wavemo {
-          0% { transform: translateX(0); }
-          50% { transform: translateX(-60px); }
-          100% { transform: translateX(0); }
-        }
-        .animate-wave { animation: wavemo 8s ease-in-out infinite; }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-wave, div[style*="animation"] { animation: none !important; }
+        @media(prefers-reduced-motion:reduce){
+          div[style*="animation"]{animation:none!important}
+          .animate-wave{animation:none!important}
         }
       `}</style>
     </div>
