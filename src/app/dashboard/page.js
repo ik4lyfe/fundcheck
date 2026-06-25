@@ -8,8 +8,6 @@ const tabs = [
   { key: 'quantitative', label: 'Quantitative', scoreLabel: 'Revenue CAGR' },
 ];
 
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1zk9_DPDSJsF0kfGrtMgt0gHyIusPprteXSW3mtXfqDY';
-
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState('business');
   const [entries, setEntries] = useState([]);
@@ -32,26 +30,21 @@ export default function DashboardPage() {
   }, [activeTab]);
 
   // Group unique stocks reviewed
-  const uniqueStocks = [...new Set(entries.map((e) => e.Counter || e.Company).filter(Boolean))];
+  const uniqueStocks = [...new Set(entries.map((e) => e.counter || e.data?.Counter || e.data?.counter).filter(Boolean))];
   const latestEntry = entries.length > 0 ? entries[0] : null;
+
+  function getField(e, field) {
+    return e.data?.[field] ?? e[field] ?? '';
+  }
 
   return (
     <div className="space-y-6">
-      {/* Header with Sheet link */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold">Dashboard</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">Monitor all analysed stocks</p>
         </div>
-        <a
-          href={SHEET_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-4 py-2 rounded-lg text-xs font-medium border border-green-300 dark:border-green-800 dark:text-green-300 text-green-700 hover:bg-green-50 dark:hover:bg-green-900/30 transition-colors inline-flex items-center gap-1.5"
-        >
-          <span className="text-sm">📊</span>
-          View Google Sheet
-        </a>
       </div>
 
       {/* Quick Stats */}
@@ -67,13 +60,13 @@ export default function DashboardPage() {
         <div className="p-4 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800/50">
           <div className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide">Latest Review</div>
           <div className="text-sm font-semibold mt-1 truncate">
-            {latestEntry ? (latestEntry['Date of Review'] || latestEntry.Date || '-') : '-'}
+            {latestEntry ? (latestEntry.dateOfReview || getField(latestEntry, 'Date of Review') || '-') : '-'}
           </div>
         </div>
         <div className="p-4 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800/50">
           <div className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide">Latest Stock</div>
           <div className="text-sm font-semibold mt-1 truncate">
-            {latestEntry ? (latestEntry.Counter || latestEntry.Company || '-') : '-'}
+            {latestEntry ? (latestEntry.counter || getField(latestEntry, 'Counter') || '-') : '-'}
           </div>
         </div>
       </div>
@@ -116,14 +109,14 @@ export default function DashboardPage() {
               {entries.map((e, i) => (
                 <tr key={i} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                   <td className="py-2.5 pr-3 text-gray-400 dark:text-gray-500 tabular-nums">{i + 1}</td>
-                  <td className="py-2.5 pr-3 font-medium">{e.Counter || e.Company || '-'}</td>
-                  <td className="py-2.5 pr-3 text-gray-600 dark:text-gray-300">{e['Date of Review'] || e.Date || '-'}</td>
+                  <td className="py-2.5 pr-3 font-medium">{e.counter || getField(e, 'Counter') || '-'}</td>
+                  <td className="py-2.5 pr-3 text-gray-600 dark:text-gray-300">{e.dateOfReview || getField(e, 'Date of Review') || '-'}</td>
                   <td className="py-2.5 pr-3 tabular-nums font-semibold">{
                     activeTab === 'quantitative'
-                      ? (e['Revenue CAGR'] ? `${e['Revenue CAGR']}%` : '-')
-                      : (e['Total Score'] || '-')
+                      ? (getField(e, 'Revenue CAGR') ? `${getField(e, 'Revenue CAGR')}%` : '-')
+                      : (getField(e, 'Total Score') || '-')
                   }</td>
-                  <td className="py-2.5 text-gray-500 dark:text-gray-400 text-xs max-w-[200px] truncate">{e.Notes || '-'}</td>
+                  <td className="py-2.5 text-gray-500 dark:text-gray-400 text-xs max-w-[200px] truncate">{getField(e, 'Notes') || '-'}</td>
                 </tr>
               ))}
             </tbody>
@@ -131,17 +124,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Bottom Sheet Link */}
-      <div className="border-t border-gray-100 dark:border-gray-700 pt-4 text-center">
-        <a
-          href={SHEET_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-        >
-          📊 Open full data in Google Sheets →
-        </a>
-      </div>
+      {/* End */}
     </div>
   );
 }
