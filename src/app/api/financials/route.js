@@ -1,4 +1,8 @@
 // API route: /api/financials?symbol=INARI
+import { rateLimit } from '@/lib/rate-limit'
+
+const limiter = rateLimit({ interval: 60 * 1000, max: 30 })
+
 // Fetches financial data from TradingView for Bursa Malaysia stocks.
 // Built for sustainability — errors never propagate to the client.
 // If TradingView API changes, the worst case is empty returns, not crashes.
@@ -46,6 +50,14 @@ const COLUMN_MAP = {
 };
 
 export async function GET(request) {
+  const { allowed, retryAfter } = limiter.check(request)
+  if (!allowed) {
+    return Response.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+    )
+  }
+
   const { searchParams } = new URL(request.url);
   const symbol = (searchParams.get('symbol') || '').trim().toUpperCase();
 

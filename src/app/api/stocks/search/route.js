@@ -1,4 +1,7 @@
 import stocks from '@/data/bursa-stocks.json';
+import { rateLimit } from '@/lib/rate-limit'
+
+const limiter = rateLimit({ interval: 60 * 1000, max: 60 })
 
 // In-memory cache for TV stock list with shariah data
 let tvCache = null;
@@ -51,6 +54,14 @@ async function fetchTVStocks() {
 }
 
 export async function GET(request) {
+  const { allowed, retryAfter } = limiter.check(request)
+  if (!allowed) {
+    return Response.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+    )
+  }
+
   const { searchParams } = new URL(request.url);
   const q = searchParams.get('q') || '';
 
