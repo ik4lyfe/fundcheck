@@ -211,7 +211,7 @@ export default function AnalysisPage() {
 
       {/* ===== FORM ===== */}
       <div>
-        {tab === 'business' && (
+        <div className={tab !== 'business' ? 'hidden' : ''}>
           <QualitativeForm
             ref={businessRef}
             title="Qualitative — Business"
@@ -222,8 +222,8 @@ export default function AnalysisPage() {
             onCompanyChange={setStock}
             date={date}
           />
-        )}
-        {tab === 'management' && (
+        </div>
+        <div className={tab !== 'management' ? 'hidden' : ''}>
           <QualitativeForm
             ref={managementRef}
             title="Qualitative — Management"
@@ -234,15 +234,15 @@ export default function AnalysisPage() {
             onCompanyChange={setStock}
             date={date}
           />
-        )}
-        {tab === 'quantitative' && (
+        </div>
+        <div className={tab !== 'quantitative' ? 'hidden' : ''}>
           <QuantitativeForm
             ref={quantRef}
             company={stock}
             onCompanyChange={setStock}
             date={date}
           />
-        )}
+        </div>
       </div>
 
       {/* ===== HISTORY ===== */}
