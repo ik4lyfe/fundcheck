@@ -1,73 +1,206 @@
-# FundCheck — Fundamental Analysis Tool
+# Fundamental
 
-A minimalist web app for systematic stock fundamental analysis using the WealthFort checklist.
+> A structured, checklist-based approach to stock fundamental analysis.  
+> Evaluate businesses, management teams, and financial health with clarity and confidence.
 
-## Pages
+[**Live App →**](https://funda-analyse.vercel.app)
 
-| Page | Route | Description |
-|------|-------|-------------|
-| Dashboard | `/` | View & filter saved entries |
-| Business | `/business` | Qualitative: 10 business criteria (1-5 each, max 50) |
-| Management | `/management` | Qualitative: 10 management criteria (1-5 each, max 50) |
-| Quantitative | `/quantitative` | 7-step financial health check with auto-CAGR calculations |
+---
 
-## Setup
+## Overview
 
-### Prerequisites
-- Node.js 18+
-- A Google Cloud Project with Sheets API enabled
+**Fundamental** (formerly FundCheck) is a web application that guides you through a systematic stock analysis process based on the WealthFort International methodology. Think of it as a digital checklist — rigorous, consistent, and repeatable.
 
-### 1. Google Cloud Setup (5 min)
+### What It Does
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project (or select existing)
-3. **Enable** the Google Sheets API
-4. Go to **IAM & Admin → Service Accounts**
-5. Click **Create Service Account** → name it "fundcheck"
-6. Click **Done** (no need to grant roles)
-7. Click on the service account → **Keys** → **Add Key** → **Create New Key**
-8. Choose **JSON** → download the file
-9. Save it as `service-account-key.json` in this directory
+1. **Qualitative Analysis** — Score a company's business model and management team across 20 weighted criteria (max 100)
+2. **Quantitative Health Check** — Run a 7-step financial health assessment: revenue growth, earnings quality, liquidity, leverage, dividends, and valuation
+3. **Dashboard** — Track all your analyses in one place, review past scores, and export professional PDF reports
 
-### 2. Create Spreadsheet
+---
 
-```bash
-node setup-sheets.js --keyfile=./service-account-key.json
-```
+## Features
 
-This creates the spreadsheet, sets up 3 tabs with headers, and outputs the `.env.local` config.
+- **Google OAuth Login** — Sign in with your Google account. No passwords to remember.
+- **Per-User Data Isolation** — Every analysis is tied to your account. You only see your own data.
+- **Auto-Fill from Market** — Fetches live financial data from TradingView (P/E, net margin, debt, free cash flow, etc.) — no manual typing needed.
+- **Shariah Compliance Badge** — Know at a glance whether a stock is Shariah-compliant (visible during stock selection).
+- **Real Bursa Stock Search** — Search from 1,100+ Malaysian-listed stocks via TradingView scanner API.
+- **PDF Export** — Generate a comprehensive PDF report covering all analysis sections.
+- **Dark Mode** — Light and dark themes, with an animated candlestick chart background that adapts to both.
 
-### 3. Configure Environment
+---
 
-Copy the output from setup-sheets.js, or create `.env.local`:
+## Screenshots
 
-```bash
-GOOGLE_SHEET_ID=your_spreadsheet_id_here
-GOOGLE_SERVICE_ACCOUNT_KEY='{"type":"service_account",...full json...}'
-```
+| Landing | Analysis | Dashboard |
+|---------|----------|-----------|
+| Hero with live candlestick chart background | Qualitative & quantitative forms side-by-side | Review and export all analyses |
 
-### 4. Run
-
-```bash
-npm run dev
-# or
-npm run build && npm start
-```
-
-## Data Structure
-
-### Qualitative Business (max 50)
-Products & Services, Market Size, Margin, Competitive Edge, Growth, Business Model, Sustainability, Industry Nature, Competition, Risks
-
-### Qualitative Management (max 50)
-Owners, Board of Directors, Management Competence, Management Integrity, Corporate Governance, Shareholder Consideration, Executive Compensation, Staff Recognition, Corporate Actions, Auditor Figures
-
-### Quantitative
-Revenue CAGR (5yr), EPS CAGR (5yr), OCF History, Current Ratio, D/E Ratio, Dividend Yield, Valuation Score
+---
 
 ## Tech Stack
 
-- Next.js 16 (App Router)
-- Tailwind CSS v4
-- Google Sheets API (database)
-- Deployed on Ubuntu VPS
+| Layer | Technology |
+|-------|-----------|
+| **Framework** | [Next.js 16](https://nextjs.org) (App Router) |
+| **Auth** | [Auth.js v5](https://authjs.dev) (Google OAuth) |
+| **Database** | [Neon (Vercel Postgres)](https://neon.tech) via [Drizzle ORM](https://orm.drizzle.team) |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com) |
+| **Charts & PDF** | jsPDF + jspdf-autotable + html2canvas |
+| **Stock Data** | TradingView Scanner API (Bursa Malaysia) |
+| **Icons** | Lucide React |
+| **Validation** | Zod |
+| **Deployment** | [Vercel](https://vercel.com) |
+| **Domain** | `funda-analyse.vercel.app` |
+
+---
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Browser (Client)                      │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────┐  │
+│  │ Landing  │  │ Analysis │  │ Dashboard│  │  PDF   │  │
+│  │  Page    │  │  (Auth)  │  │  (Auth)  │  │ Export │  │
+│  └──────────┘  └──────────┘  └──────────┘  └────────┘  │
+└────────────────────────┬────────────────────────────────┘
+                         │
+┌────────────────────────▼────────────────────────────────┐
+│                  Next.js API Routes                      │
+│  ┌────────────┐ ┌────────────┐ ┌──────────────────┐    │
+│  │ /api/auth  │ │ /api/entries│ │ /api/financials  │    │
+│  │ (Auth.js)  │ │ (CRUD)      │ │ (TV Proxy)       │    │
+│  └────────────┘ └─────┬──────┘ └────────┬─────────┘    │
+└────────────────────────┼────────────────┼──────────────┘
+                         │                │
+        ┌────────────────▼──┐    ┌────────▼─────────┐
+        │  Vercel Postgres  │    │  TradingView API  │
+        │  (Neon) + Drizzle │    │  (Bursa Scanner)  │
+        └───────────────────┘    └──────────────────┘
+```
+
+### Security
+
+- **No passwords stored** — Authentication is delegated entirely to Google OAuth (handles 2FA, brute-force protection).
+- **Per-user row filtering** — Every database query includes `WHERE user_id = current_user.id`.
+- **Rate-limited APIs** — 30 req/min for write endpoints, 60 req/min for data proxies.
+- **Input validation** — All POST data is validated with Zod schemas before processing.
+- **Security headers** — CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy set via Next.js config.
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- A Google Cloud project with OAuth credentials (for authentication)
+- A Vercel Postgres database
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/ik4lyfe/fundcheck.git
+cd fundcheck
+npm install
+```
+
+### 2. Configure Environment Variables
+
+Create a `.env.local` file:
+
+```env
+AUTH_SECRET=your_nextauth_secret
+AUTH_GOOGLE_ID=your_google_oauth_client_id
+AUTH_GOOGLE_SECRET=your_google_oauth_client_secret
+POSTGRES_URL=your_vercel_postgres_connection_string
+```
+
+### 3. Set Up the Database
+
+```bash
+npx drizzle-kit push
+```
+
+This creates the `users` and `analyses` tables automatically.
+
+### 4. Run Locally
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 5. Deploy to Vercel
+
+```bash
+npm run build
+vercel --prod
+```
+
+Ensure all environment variables are set in your Vercel project settings.
+
+---
+
+## API Reference
+
+### `GET /api/stocks/search?q={query}`
+Search Bursa Malaysia stocks by name or ticker. Returns up to 20 matching stocks with Shariah compliance status.
+
+### `GET /api/financials?symbol={symbol}`
+Fetch key financial metrics for a stock from TradingView. Returns revenue, EPS, P/E ratio, debt, free cash flow, net margin, ROE, ROA, and more.
+
+### `GET /api/entries`
+List all analyses for the current authenticated user.
+
+### `POST /api/entries`
+Save a new analysis entry (validated with Zod).
+
+### `DELETE /api/entries/{id}`
+Delete a specific analysis entry (scoped to the current user).
+
+---
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── page.js              # Landing page with hero animation
+│   ├── layout.js            # Global layout (NavBar, AuthProvider, footer)
+│   ├── login/page.js        # Google sign-in page
+│   ├── analysis/page.js     # Main analysis page (qualitative + quantitative)
+│   ├── dashboard/page.js    # Saved analyses dashboard
+│   └── api/
+│       ├── auth/            # Auth.js route handler
+│       ├── entries/         # Analysis CRUD endpoints
+│       ├── financials/      # TradingView financial data proxy
+│       └── stocks/search/   # Bursa stock search proxy
+├── components/
+│   ├── AnimatedBackground.js  # Candlestick chart hero animation
+│   ├── AutoFillButton.js      # Market data auto-filler
+│   ├── ExportPdfButton.js     # PDF report generator
+│   ├── NavBar.js              # Navigation with avatar dropdown
+│   ├── QualitativeForm.js     # Business & management scoring
+│   ├── QuantitativeForm.js    # Financial health check form
+│   └── StockSelector.js       # Stock search with Shariah badge
+└── lib/
+    ├── auth.js              # Auth.js configuration
+    ├── db.js                # Database client (Neon)
+    ├── rate-limit.js        # In-memory rate limiter
+    └── schema.js            # Drizzle table definitions
+```
+
+---
+
+## License
+
+This project is built for personal and educational use.  
+Inspired by the WealthFort International Sdn. Bhd. fundamental analysis checklists.
+
+---
+
+Built by [Zahiruddin Zaki](https://linkedin.com/in/zahiruddin-zaki) · Independent tool — not affiliated with WealthFort.
