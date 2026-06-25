@@ -149,6 +149,8 @@ export default function AnimatedBackground() {
         </defs>
         <rect width="100" height="40" fill={`url(#g-${dark ? 'd' : 'l'})`} />
 
+        <style>{`@keyframes cfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}`}</style>
+
         {CANDLES.map((c, i) => {
           const isUp = c.c >= c.o;
           const bodyH  = Math.abs(c.c - c.o);
@@ -163,7 +165,7 @@ export default function AnimatedBackground() {
           const bw = 0.85;
 
           return (
-            <g key={i}>
+            <g key={i} style={{ animation: `cfl 2.5s ease-in-out ${i * 0.05}s infinite` }}>
               {hasWick && (
                 <line
                   x1={c.x} y1={highY} x2={c.x} y2={lowY}
