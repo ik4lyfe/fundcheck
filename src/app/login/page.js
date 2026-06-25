@@ -44,11 +44,6 @@ export default function LoginPage() {
             Sign in with Google
           </button>
         </div>
-
-        {/* Footer */}
-        <p className="mt-12 text-center text-xs text-gray-400 dark:text-gray-500">
-          Powered by WealthFort International
-        </p>
       </div>
     </div>
   );

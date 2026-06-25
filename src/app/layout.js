@@ -31,20 +31,24 @@ export default function RootLayout({ children }) {
             {children}
           </main>
 
-          {/* Footer — WealthFort Credit */}
+          {/* Footer */}
           <footer className="border-t border-gray-200 dark:border-gray-800 bg-gray-50/30 dark:bg-gray-900/50">
             <div className="max-w-5xl mx-auto px-4 py-5 sm:py-6">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-center">
-                <img
-                  src="/wealthfort-logo.jpg"
-                  alt="WealthFort International"
-                  className="h-6 sm:h-7 w-auto opacity-70"
-                />
-                <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed max-w-md">
-                  Fundamental is powered by{' '}
-                  <span className="font-medium text-gray-500 dark:text-gray-400">WealthFort International Sdn. Bhd.</span>
-                  <br />
-                  All Rights Reserved &copy; {new Date().getFullYear()}
+              <div className="flex flex-col items-center justify-center gap-1 text-center">
+                <p className="text-xs text-gray-400 dark:text-gray-500">
+                  Built by{' '}
+                  <a
+                    href="https://linkedin.com/in/zahiruddin-zaki"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                  >
+                    Zahiruddin Zaki
+                  </a>
+                  {' · '}Based on WealthFort International Sdn. Bhd. checklists
+                </p>
+                <p className="text-[11px] text-gray-400/60 dark:text-gray-500/60 italic">
+                  Independent tool — not affiliated with WealthFort
                 </p>
               </div>
             </div>

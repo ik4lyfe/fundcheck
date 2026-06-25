@@ -289,7 +289,7 @@ export default function ExportPdfButton({ stock, date, sections }) {
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(100);
-      doc.text('Powered by WealthFort International Sdn. Bhd.', pageW / 2, 68, { align: 'center' });
+      doc.text('Based on WealthFort International Sdn. Bhd. checklists', pageW / 2, 68, { align: 'center' });
 
       doc.setDrawColor(200);
       doc.line(50, 75, 160, 75);
@@ -339,7 +339,7 @@ export default function ExportPdfButton({ stock, date, sections }) {
         doc.setFont('helvetica', 'italic');
         doc.setTextColor(150);
         doc.text(
-          'Fundamental — powered by WealthFort International Sdn. Bhd. All Rights Reserved.',
+          'Built by Zahiruddin Zaki · Based on WealthFort checklists',
           pageW / 2,
           285,
           { align: 'center' }

@@ -47,7 +47,7 @@ export default function LandingPage() {
       <section className="flex-1 flex flex-col items-center justify-center text-center py-20 sm:py-28">
         <div className="max-w-3xl mx-auto px-4">
           <div className="inline-block mb-6 px-4 py-1.5 rounded-full text-xs font-medium tracking-wide bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/30">
-            Powered by WealthFort International
+            Based on WealthFort Checklists
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
             <span className="bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 dark:from-gray-100 dark:via-blue-300 dark:to-indigo-300 bg-clip-text text-transparent">
@@ -106,13 +106,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t border-gray-100 dark:border-gray-800 py-6 text-center">
-        <p className="text-xs text-gray-400 dark:text-gray-500">
-          Powered by <span className="font-medium text-gray-500 dark:text-gray-400">WealthFort International Sdn. Bhd.</span>
-        </p>
-      </footer>
     </div>
   );
 }
