@@ -21,8 +21,8 @@ function RatingSelector({ value, onChange }) {
           onClick={() => onChange(r.value)}
           className={`w-9 h-9 rounded-full text-xs font-medium border transition-colors ${
             value === r.value
-              ? 'bg-gray-900 text-white border-gray-900'
-              : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+              ? 'bg-gray-900 dark:bg-gray-100 dark:text-gray-900 dark:border-gray-100'
+              : 'bg-white dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
           }`}
           title={r.label}
         >
@@ -101,9 +101,9 @@ const QualitativeForm = forwardRef(function QualitativeForm({ title, tab, criter
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Score indicator */}
       <div className="flex items-center justify-between">
-        <div className="text-xs text-gray-400 uppercase tracking-wide">Score</div>
+        <div className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide">Score</div>
         <div className="text-2xl font-bold tabular-nums">
-          {total}<span className="text-gray-300 text-lg font-normal">/{maxScore}</span>
+          {total}<span className="text-gray-300 dark:text-gray-600 text-lg font-normal">/{maxScore}</span>
         </div>
       </div>
 
@@ -112,13 +112,13 @@ const QualitativeForm = forwardRef(function QualitativeForm({ title, tab, criter
         {criteria.map((c, i) => (
           <div
             key={i}
-            className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border border-gray-100 bg-gray-50/50"
+            className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800/50"
           >
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-gray-900">
+              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                 {i + 1}. {c.label}
               </div>
-              <div className="text-xs text-gray-500 mt-0.5 leading-relaxed">{c.desc}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">{c.desc}</div>
             </div>
             <RatingSelector value={scores[i]} onChange={(v) => handleScore(i, v)} />
           </div>
@@ -127,12 +127,12 @@ const QualitativeForm = forwardRef(function QualitativeForm({ title, tab, criter
 
       {/* Notes */}
       <div>
-        <label className="block text-xs text-gray-500 mb-1">Notes (optional)</label>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Notes (optional)</label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={2}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 resize-none"
+          className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 dark:focus:ring-gray-100/20 resize-none"
           placeholder="Key observations..."
         />
       </div>
@@ -143,12 +143,12 @@ const QualitativeForm = forwardRef(function QualitativeForm({ title, tab, criter
           <button
             type="submit"
             disabled={!company.trim() || !allRated || saving}
-            className="px-6 py-2.5 rounded-lg text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2.5 rounded-lg text-sm font-medium bg-gray-900 dark:bg-gray-100 dark:text-gray-900 text-white hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {saving ? 'Saving...' : done ? '✓ Saved!' : 'Save to Sheet'}
           </button>
           {!allRated && (
-            <span className="text-xs text-amber-600">
+            <span className="text-xs text-amber-600 dark:text-amber-400">
               Rate all {criteria.length} criteria first
             </span>
           )}

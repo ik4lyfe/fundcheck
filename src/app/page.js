@@ -71,23 +71,23 @@ const historyColumns = {
 function HistoryTable({ tab, entries }) {
   const cols = historyColumns[tab] || [];
   if (entries.length === 0) {
-    return <div className="text-sm text-gray-400 py-6 text-center">No entries yet.</div>;
+    return <div className="text-sm text-gray-400 dark:text-gray-500 py-6 text-center">No entries yet.</div>;
   }
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-200">
+          <tr className="border-b border-gray-200 dark:border-gray-700">
             {cols.map((c) => (
-              <th key={c} className="text-left py-2 pr-4 font-medium text-gray-500 whitespace-nowrap">{c}</th>
+              <th key={c} className="text-left py-2 pr-4 font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">{c}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {entries.map((e, i) => (
-            <tr key={i} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+            <tr key={i} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
               {cols.map((c) => (
-                <td key={c} className="py-2.5 pr-4 text-gray-600 tabular-nums whitespace-nowrap">{e[c] || '-'}</td>
+                <td key={c} className="py-2.5 pr-4 text-gray-600 dark:text-gray-300 tabular-nums whitespace-nowrap">{e[c] || '-'}</td>
               ))}
             </tr>
           ))}
@@ -145,14 +145,14 @@ export default function AnalysisPage() {
           <StockSelector value={stock} onChange={setStock} />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">
+          <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">
             Date of Review
           </label>
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+            className="border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 dark:focus:ring-gray-100/20"
           />
         </div>
       </div>
@@ -168,15 +168,15 @@ export default function AnalysisPage() {
 
       {/* ===== TABS ===== */}
       <div>
-        <div className="flex gap-1 border-b border-gray-200">
+        <div className="flex gap-1 border-b border-gray-200 dark:border-gray-700">
           {tabs.map((t) => (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
               className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 tab === t.key
-                  ? 'border-gray-900 text-gray-900'
-                  : 'border-transparent text-gray-400 hover:text-gray-600'
+                  ? 'border-gray-900 text-gray-900 dark:text-gray-100'
+                  : 'border-transparent text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
               }`}
             >
               {t.label}
@@ -184,7 +184,7 @@ export default function AnalysisPage() {
           ))}
         </div>
         {currentTab && (
-          <p className="text-xs text-gray-400 mt-1.5">{currentTab.desc}</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5">{currentTab.desc}</p>
         )}
       </div>
 
@@ -225,20 +225,20 @@ export default function AnalysisPage() {
       </div>
 
       {/* ===== HISTORY ===== */}
-      <section className="pt-4 border-t border-gray-200">
+      <section className="pt-4 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
             History — {currentTab?.label || tab}
           </h2>
           <button
             onClick={fetchEntries}
-            className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             ↻ Refresh
           </button>
         </div>
         {loading ? (
-          <div className="text-sm text-gray-400 py-6 text-center">Loading...</div>
+          <div className="text-sm text-gray-400 dark:text-gray-500 py-6 text-center">Loading...</div>
         ) : (
           <HistoryTable tab={tab} entries={entries} />
         )}

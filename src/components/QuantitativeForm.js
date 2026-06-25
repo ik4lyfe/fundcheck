@@ -7,14 +7,14 @@ import AutoFillButton from './AutoFillButton';
 function InputField({ label, value, onChange, suffix }) {
   return (
     <div>
-      <label className="block text-xs text-gray-500 mb-1">{label}</label>
+      <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">{label}</label>
       <div className="flex items-center gap-1">
         <input
           type="number"
           step="any"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+          className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 dark:focus:ring-gray-100/20"
         />
         {suffix && <span className="text-xs text-gray-400 w-5">{suffix}</span>}
       </div>
@@ -25,13 +25,14 @@ function InputField({ label, value, onChange, suffix }) {
 // Color helpers based on Bursa Malaysia market benchmarks
 function colorClass(value, thresholds) {
   if (value === null || value === undefined || value === '') return 'text-gray-400';
-  if (thresholds.green(value)) return 'text-green-600 font-semibold';
-  if (thresholds.amber(value)) return 'text-amber-600 font-semibold';
-  return 'text-red-600 font-semibold';
+  if (thresholds.green(value)) return 'text-green-600 dark:text-green-400 font-semibold';
+  if (thresholds.amber(value)) return 'text-amber-600 dark:text-amber-400 font-semibold';
+  return 'text-red-600 dark:text-red-400 font-semibold';
 }
 
 // Explicit map for TW v4 static detection
 /* tw: text-gray-400 text-green-600 text-amber-600 text-red-600 font-semibold */
+/* tw: dark:text-green-400 dark:text-amber-400 dark:text-red-400 */
 
 const benchmarks = {
   revCagr: {
@@ -122,7 +123,7 @@ function MetricBadge({ metric, value, raw }) {
   if (!b) return null;
   return (
     <div className="flex items-center justify-between py-1">
-      <span className="text-xs text-gray-500">{b.label}</span>
+      <span className="text-xs text-gray-500 dark:text-gray-400">{b.label}</span>
       <div className="flex items-center gap-2">
         <span className={colorClass(raw, b.thresholds)}>{b.format(raw)}</span>
         <span className="text-[10px] text-gray-400 hidden sm:inline" title={b.tip}>ⓘ</span>
@@ -297,7 +298,7 @@ const QuantitativeForm = forwardRef(function QuantitativeForm({ company, onCompa
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Score Dashboard */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 p-4 rounded-lg border border-gray-100 bg-gray-50/50">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 p-4 rounded-lg border border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
         <MetricBadge metric="revCagr" raw={revCagr} />
         <MetricBadge metric="epsCagr" raw={epsCagr} />
         <MetricBadge metric="ocf" raw={form.ocf ? Number(form.ocf) : null} />
@@ -310,28 +311,28 @@ const QuantitativeForm = forwardRef(function QuantitativeForm({ company, onCompa
       </div>
 
       {/* Auto-Fill */}
-      <div className="flex items-start justify-between gap-3 p-3 rounded-lg border border-blue-100 bg-blue-50/30">
-        <div className="text-xs text-blue-700 leading-relaxed">
+      <div className="flex items-start justify-between gap-3 p-3 rounded-lg border border-blue-100 dark:border-blue-800 dark:bg-blue-900/20 bg-blue-50/30">
+        <div className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
           <span className="font-semibold">Quick Fill:</span> Auto-populate current financial data from{' '}
           <span className="font-semibold">TradingView</span>.
           <br />
-          <span className="text-blue-500">Historical data (5yr ago) still needs manual input for CAGR calculation.</span>
+          <span className="text-blue-500 dark:text-blue-400">Historical data (5yr ago) still needs manual input for CAGR calculation.</span>
         </div>
         <AutoFillButton symbol={company} onFill={handleAutoFill} />
       </div>
 
       {/* Key Market Stats — shown after auto-fill */}
       {marketStats && (
-        <div className="rounded-lg border border-gray-100 bg-white overflow-hidden">
-          <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 border-b border-gray-100">
+        <div className="rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800 bg-white overflow-hidden">
+          <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700">
             <img
               src="https://searchvectorlogo.com/wp-content/uploads/2021/07/tradingview-logo-vector.png"
               alt="TradingView"
               className="h-4 w-auto dark:invert"
             />
-            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Key Market Statistics</span>
+            <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">Key Market Statistics</span>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-px bg-gray-100">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-px bg-gray-100 dark:bg-gray-700">
             {[
               { label: 'Market Cap', value: marketStats.marketCap ? `RM ${Number(marketStats.marketCap).toFixed(1)}m` : '-', icon: '🏢' },
               { label: 'P/E Ratio', value: marketStats.pe ? `${Number(marketStats.pe).toFixed(1)}x` : '-', icon: '📊' },
@@ -346,11 +347,11 @@ const QuantitativeForm = forwardRef(function QuantitativeForm({ company, onCompa
               { label: 'Free Cash Flow', value: marketStats.freeCashFlow ? `RM ${Number(marketStats.freeCashFlow).toFixed(0)}m` : '-', icon: '💎' },
               { label: 'Employees', value: marketStats.employees ? Number(marketStats.employees).toLocaleString() : '-', icon: '👥' },
             ].map((stat) => (
-              <div key={stat.label} className="flex flex-col gap-0.5 bg-white px-3 py-2.5">
+              <div key={stat.label} className="flex flex-col gap-0.5 bg-white dark:bg-gray-800 px-3 py-2.5">
                 <span className="text-[10px] text-gray-400 flex items-center gap-1">
                   <span>{stat.icon}</span> {stat.label}
                 </span>
-                <span className="text-sm font-semibold text-gray-800">{stat.value}</span>
+                <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{stat.value}</span>
               </div>
             ))}
           </div>
@@ -359,74 +360,74 @@ const QuantitativeForm = forwardRef(function QuantitativeForm({ company, onCompa
 
       {/* Step 1-2: Revenue & EPS */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-3 p-4 rounded-lg border border-gray-100 bg-gray-50/50">
-          <h3 className="text-sm font-semibold text-gray-800">Step 1: Revenue Growth</h3>
+        <div className="space-y-3 p-4 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800/50 bg-gray-50/50">
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100">Step 1: Revenue Growth</h3>
           <InputField label="Past 5th Year Revenue (RM m)" value={form.rev5} onChange={(v) => set('rev5', v)} />
           <InputField label="Current Year Revenue (RM m)" value={form.revCur} onChange={(v) => set('revCur', v)} />
           <MetricBadge metric="revCagr" raw={revCagr} />
-          <p className="text-[10px] text-gray-400">{benchmarks.revCagr.tip}</p>
+          <p className="text-[10px] text-gray-400 dark:text-gray-500">{benchmarks.revCagr.tip}</p>
         </div>
 
-        <div className="space-y-3 p-4 rounded-lg border border-gray-100 bg-gray-50/50">
-          <h3 className="text-sm font-semibold text-gray-800">Step 2: EPS Growth</h3>
+        <div className="space-y-3 p-4 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800/50 bg-gray-50/50">
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100">Step 2: EPS Growth</h3>
           <InputField label="Past 5th Year EPS" value={form.eps5} onChange={(v) => set('eps5', v)} />
           <InputField label="Current Year EPS" value={form.epsCur} onChange={(v) => set('epsCur', v)} />
           <MetricBadge metric="epsCagr" raw={epsCagr} />
-          <p className="text-[10px] text-gray-400">{benchmarks.epsCagr.tip}</p>
+          <p className="text-[10px] text-gray-400 dark:text-gray-500">{benchmarks.epsCagr.tip}</p>
         </div>
       </div>
 
       {/* Step 3-5 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 rounded-lg border border-gray-100 bg-gray-50/50">
-          <h3 className="text-sm font-semibold text-gray-800 mb-2">Step 3: OCF</h3>
+        <div className="p-4 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800/50 bg-gray-50/50">
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Step 3: OCF</h3>
           <InputField label="Years of Positive OCF" value={form.ocf} onChange={(v) => set('ocf', v)} />
-          <p className="text-[10px] text-gray-400 mt-1">{benchmarks.ocf.tip}</p>
+          <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{benchmarks.ocf.tip}</p>
         </div>
 
-        <div className="p-4 rounded-lg border border-gray-100 bg-gray-50/50">
-          <h3 className="text-sm font-semibold text-gray-800 mb-2">Step 4: Liquidity</h3>
+        <div className="p-4 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800/50 bg-gray-50/50">
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Step 4: Liquidity</h3>
           <div className="space-y-2">
             <InputField label="Current Assets" value={form.ca} onChange={(v) => set('ca', v)} />
             <InputField label="Current Liabilities" value={form.cl} onChange={(v) => set('cl', v)} />
           </div>
           <MetricBadge metric="curRatio" raw={curRatio} />
-          <p className="text-[10px] text-gray-400">{benchmarks.curRatio.tip}</p>
+          <p className="text-[10px] text-gray-400 dark:text-gray-500">{benchmarks.curRatio.tip}</p>
         </div>
 
-        <div className="p-4 rounded-lg border border-gray-100 bg-gray-50/50">
-          <h3 className="text-sm font-semibold text-gray-800 mb-2">Step 5: Debt</h3>
+        <div className="p-4 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800/50 bg-gray-50/50">
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Step 5: Debt</h3>
           <div className="space-y-2">
             <InputField label="Total Liabilities" value={form.tl} onChange={(v) => set('tl', v)} />
             <InputField label="Total Equities" value={form.te} onChange={(v) => set('te', v)} />
           </div>
           <MetricBadge metric="deRatio" raw={deRatio} />
-          <p className="text-[10px] text-gray-400">{benchmarks.deRatio.tip}</p>
+          <p className="text-[10px] text-gray-400 dark:text-gray-500">{benchmarks.deRatio.tip}</p>
         </div>
       </div>
 
       {/* Step 6-7 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="p-4 rounded-lg border border-gray-100 bg-gray-50/50">
-          <h3 className="text-sm font-semibold text-gray-800 mb-2">Step 6: Dividend</h3>
+        <div className="p-4 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800/50 bg-gray-50/50">
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Step 6: Dividend</h3>
           <div className="space-y-2">
             <InputField label="Dividend Per Share (DPS)" value={form.dps} onChange={(v) => set('dps', v)} />
             <InputField label="Current Share Price" value={form.price} onChange={(v) => set('price', v)} />
           </div>
           <MetricBadge metric="divYield" raw={divYield} />
-          <p className="text-[10px] text-gray-400">{benchmarks.divYield.tip}</p>
+          <p className="text-[10px] text-gray-400 dark:text-gray-500">{benchmarks.divYield.tip}</p>
         </div>
 
-        <div className="p-4 rounded-lg border border-gray-100 bg-gray-50/50">
-          <h3 className="text-sm font-semibold text-gray-800 mb-2">Step 7: Valuation</h3>
+        <div className="p-4 rounded-lg border border-gray-100 dark:border-gray-700 dark:bg-gray-800/50 bg-gray-50/50">
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Step 7: Valuation</h3>
           <InputField label="Valuation Score (1-5)" value={valuation} onChange={setValuation} />
           <div className="mt-2">
-            <label className="block text-xs text-gray-500 mb-1">Notes</label>
+            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Notes</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 resize-none"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 dark:focus:ring-gray-100/20 resize-none"
               placeholder="P/E ratio, PEG, EV/EBITDA, comparable..."
             />
           </div>
@@ -439,7 +440,7 @@ const QuantitativeForm = forwardRef(function QuantitativeForm({ company, onCompa
           <button
             type="submit"
             disabled={!company.trim() || saving}
-            className="px-6 py-2.5 rounded-lg text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2.5 rounded-lg text-sm font-medium bg-gray-900 dark:bg-gray-100 dark:text-gray-900 text-white hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {saving ? 'Saving...' : done ? '✓ Saved!' : 'Save to Sheet'}
           </button>

@@ -36,14 +36,14 @@ export default function ManagementPage() {
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
         <StockSelector value={stock} onChange={setStock} />
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">Date of Review</label>
+          <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">Date of Review</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20" />
+            className="border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 dark:focus:ring-gray-100/20" />
         </div>
       </div>
       <div>
         <h1 className="text-lg font-semibold">Qualitative — Management</h1>
-        <p className="text-sm text-gray-500">Rate each criterion from 1 (Poor) to 5 (Excellent)</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Rate each criterion from 1 (Poor) to 5 (Excellent)</p>
       </div>
       <QualitativeForm title="Management" tab="management" criteria={criteria} maxScore={50}
         company={stock} onCompanyChange={setStock} date={date} />

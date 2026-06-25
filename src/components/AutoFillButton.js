@@ -59,8 +59,8 @@ export default function AutoFillButton({ symbol, onFill }) {
           disabled={!symbol || loading}
           className={`px-4 py-2 rounded-lg text-xs font-medium border transition-colors inline-flex items-center gap-1.5 ${
             !symbol || loading
-              ? 'border-gray-200 text-gray-400 cursor-not-allowed'
-              : 'border-blue-200 text-blue-700 hover:bg-blue-50'
+              ? 'border-gray-200 dark:border-gray-600 dark:text-gray-500 cursor-not-allowed'
+              : 'border-blue-200 dark:border-blue-800 dark:text-blue-300 text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/30'
           }`}
         >
           {loading ? (
@@ -76,14 +76,14 @@ export default function AutoFillButton({ symbol, onFill }) {
 
       {/* Source badge — shown after successful fetch */}
       {source && (
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] bg-blue-50/50 border border-blue-100 rounded-lg px-3 py-2">
-          <span className="text-blue-600 font-medium">📡 {source.name}</span>
-          <span className="text-gray-500">🕐 {formatTime(source.fetchedAt)}</span>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] bg-blue-50/50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg px-3 py-2">
+          <span className="text-blue-600 dark:text-blue-300 font-medium">📡 {source.name}</span>
+          <span className="text-gray-500 dark:text-gray-400">🕐 {formatTime(source.fetchedAt)}</span>
           <a
             href={source.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 underline hover:text-blue-800 inline-flex items-center gap-0.5"
+            className="text-blue-600 dark:text-blue-300 underline hover:text-blue-800 inline-flex items-center gap-0.5"
           >
             🔗 Verify on {source.name}
           </a>
@@ -91,7 +91,7 @@ export default function AutoFillButton({ symbol, onFill }) {
       )}
 
       {error && (
-        <span className="text-xs text-red-500">{error}</span>
+        <span className="text-xs text-red-500 dark:text-red-400">{error}</span>
       )}
     </div>
   );

@@ -84,7 +84,7 @@ export default function StockSelector({ value, onChange }) {
 
   return (
     <div ref={wrapperRef} className="relative flex-1 min-w-[200px]">
-      <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">
+      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">
         Counter / Stock
       </label>
       <input
@@ -95,7 +95,7 @@ export default function StockSelector({ value, onChange }) {
         onKeyDown={handleKeyDown}
         onFocus={() => { if (suggestions.length > 0) setOpen(true); }}
         placeholder="Type code or name… e.g. INARI"
-        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+        className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/20 dark:focus:ring-gray-100/20"
         autoComplete="off"
         required
       />
@@ -103,33 +103,33 @@ export default function StockSelector({ value, onChange }) {
       {/* Loading spinner */}
       {loading && (
         <div className="absolute right-3 top-9">
-          <div className="w-3.5 h-3.5 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin" />
+          <div className="w-3.5 h-3.5 border-2 border-gray-300 dark:border-gray-600 border-t-gray-900 dark:border-t-gray-100 rounded-full animate-spin" />
         </div>
       )}
 
       {/* Dropdown */}
       {open && suggestions.length > 0 && (
-        <ul className="absolute z-50 left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden max-h-60 overflow-y-auto">
+        <ul className="absolute z-50 left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden max-h-60 overflow-y-auto">
           {suggestions.map((stock, i) => (
             <li
               key={stock.symbol}
               onClick={() => selectStock(stock)}
               onMouseEnter={() => setHighlight(i)}
-              className={`px-3 py-2.5 cursor-pointer text-sm border-b border-gray-50 last:border-0 transition-colors ${
-                i === highlight ? 'bg-gray-100' : 'hover:bg-gray-50'
+              className={`px-3 py-2.5 cursor-pointer text-sm border-b border-gray-50 dark:border-gray-700 last:border-0 transition-colors ${
+                i === highlight ? 'bg-gray-100 dark:bg-gray-700' : 'hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="font-semibold text-gray-900">{stock.symbol}</span>
-                  <span className="text-gray-400 mx-1.5">—</span>
-                  <span className="text-gray-600 text-xs">{stock.name}</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-100">{stock.symbol}</span>
+                  <span className="text-gray-400 dark:text-gray-500 mx-1.5">—</span>
+                  <span className="text-gray-600 dark:text-gray-300 text-xs">{stock.name}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider bg-gray-100 px-1.5 py-0.5 rounded">
+                  <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">
                     {stock.sector}
                   </span>
-                  <span className="text-[10px] font-mono text-gray-400">{stock.market}</span>
+                  <span className="text-[10px] font-mono text-gray-400 dark:text-gray-500">{stock.market}</span>
                 </div>
               </div>
             </li>

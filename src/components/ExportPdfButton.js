@@ -366,8 +366,8 @@ export default function ExportPdfButton({ stock, date, sections }) {
       disabled={!allComplete || exporting}
       className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-colors inline-flex items-center gap-1.5 ${
         allComplete
-          ? 'bg-gray-900 text-white hover:bg-gray-800'
-          : 'border border-gray-300 text-gray-400 cursor-not-allowed'
+          ? 'bg-gray-900 dark:bg-gray-100 dark:text-gray-900 text-white hover:bg-gray-800 dark:hover:bg-gray-200'
+          : 'border border-gray-300 dark:border-gray-600 dark:text-gray-500 cursor-not-allowed'
       }`}
     >
       {exporting
