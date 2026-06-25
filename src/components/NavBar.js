@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession, signOut, signIn } from 'next-auth/react';
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -35,7 +35,7 @@ export default function NavBar() {
   }
 
   const links = [
-    { href: '/', label: 'Analysis' },
+    { href: '/analysis', label: 'Analysis' },
     { href: '/dashboard', label: 'Dashboard' },
   ];
 
@@ -70,40 +70,52 @@ export default function NavBar() {
           {dark ? '☀️' : '🌙'}
         </button>
 
-        {/* User avatar + dropdown */}
-        {session?.user && (
-          <div ref={menuRef} className="relative">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="block overflow-hidden rounded-full ring-2 ring-transparent hover:ring-gray-300 dark:hover:ring-gray-600 transition-all"
-            >
-              <img
-                src={session.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name || '?')}&background=6B7280&color=fff&size=32`}
-                alt={session.user.name || 'User'}
-                className="w-7 h-7 rounded-full object-cover"
-              />
-            </button>
+        {/* User avatar / sign-in button */}
+        <div ref={menuRef} className="relative">
+          {session?.user ? (
+            <>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="block overflow-hidden rounded-full ring-2 ring-transparent hover:ring-gray-300 dark:hover:ring-gray-600 transition-all"
+              >
+                <img
+                  src={session.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name || '?')}&background=6B7280&color=fff&size=32`}
+                  alt={session.user.name || 'User'}
+                  className="w-7 h-7 rounded-full object-cover"
+                />
+              </button>
 
-            {menuOpen && (
-              <div className="absolute right-0 top-10 z-50 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1">
-                <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-700">
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                    {session.user.name}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    {session.user.email}
-                  </p>
+              {menuOpen && (
+                <div className="absolute right-0 top-10 z-50 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1">
+                  <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-700">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                      {session.user.name}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      {session.user.email}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => signOut()}
+                    className="w-full text-left px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Sign Out
+                  </button>
                 </div>
-                <button
-                  onClick={() => signOut()}
-                  className="w-full text-left px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                >
-                  Sign Out
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </>
+          ) : (
+            <button
+              onClick={() => signIn('google', { callbackUrl: '/analysis' })}
+              className="w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all flex items-center justify-center"
+              title="Sign in"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
     </nav>
   );
