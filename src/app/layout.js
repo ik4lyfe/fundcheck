@@ -1,5 +1,6 @@
 import NavBar from '@/components/NavBar';
 import SessionProvider from '@/components/SessionProvider';
+import { auth } from '@/lib/auth';
 import './globals.css';
 
 export const metadata = {
@@ -7,7 +8,9 @@ export const metadata = {
   description: 'WealthFort checklist-based fundamental analysis tool',
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const session = await auth();
+
   return (
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <head>
@@ -25,7 +28,7 @@ export default function RootLayout({ children }) {
         }} />
       </head>
       <body className="min-h-full flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
-        <SessionProvider>
+        <SessionProvider session={session}>
           <NavBar />
           <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-4 sm:py-8">
             {children}
