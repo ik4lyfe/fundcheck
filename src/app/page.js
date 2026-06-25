@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import AnimatedBackground from '@/components/AnimatedBackground';
 
 const features = [
   {
@@ -44,8 +45,9 @@ export default function LandingPage() {
   return (
     <div className="min-h-[80vh] flex flex-col">
       {/* Hero Section */}
-      <section className="flex-1 flex flex-col items-center justify-center text-center py-20 sm:py-28">
-        <div className="max-w-3xl mx-auto px-4">
+      <section className="relative flex-1 flex flex-col items-center justify-center text-center py-20 sm:py-28 overflow-hidden">
+        <AnimatedBackground />
+        <div className="relative z-10 max-w-3xl mx-auto px-4">
           <div className="inline-block mb-6 px-4 py-1.5 rounded-full text-xs font-medium tracking-wide bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/30">
             Based on WealthFort Checklists
           </div>
