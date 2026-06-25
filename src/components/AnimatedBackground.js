@@ -129,7 +129,7 @@ export default function AnimatedBackground() {
   const downColor  = dark ? '#ef4444' : '#dc2626';
   const gridColor  = dark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)';
   const labelColor = dark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
-  const opacity    = dark ? 0.35 : 0.25;
+  const opacity    = dark ? 0.35 : 0.32;
 
   // Map price (0-100) to SVG y (35→5)
   const py = (v) => 35 - (v / 100) * 30;
@@ -160,7 +160,7 @@ export default function AnimatedBackground() {
           const openY = py(c.o);
           const hasWick = wickH > bodyH + 1;
           const hasBody = bodyH > 0.8;
-          const bw = 1.2;
+          const bw = 0.85;
 
           return (
             <g key={i}>
@@ -168,7 +168,7 @@ export default function AnimatedBackground() {
                 <line
                   x1={c.x} y1={highY} x2={c.x} y2={lowY}
                   stroke={isUp ? upColor : downColor}
-                  strokeWidth="0.4"
+                  strokeWidth="0.28"
                   strokeLinecap="round"
                 />
               )}
