@@ -1,8 +1,27 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function LoginPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.replace('/analysis');
+    }
+  }, [status, router]);
+
+  if (status === 'loading' || status === 'authenticated') {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-gray-400 dark:text-gray-500 text-sm">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center">
       <div className="mx-auto w-full max-w-md space-y-8 px-4">
